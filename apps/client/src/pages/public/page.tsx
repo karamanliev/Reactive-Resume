@@ -1,4 +1,3 @@
-import { t } from "@lingui/macro";
 import { CircleNotch, FilePdf } from "@phosphor-icons/react";
 import type { ResumeDto } from "@reactive-resume/dto";
 import { type MobileErrorState, useMobileConfig } from "@reactive-resume/hooks";
@@ -7,9 +6,8 @@ import { pageSizeMap } from "@reactive-resume/utils";
 import { useCallback, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import type { LoaderFunction } from "react-router";
-import { Link, redirect, useLoaderData } from "react-router";
+import { redirect, useLoaderData } from "react-router";
 
-import { Icon } from "@/client/components/icon";
 import { IframeErrorBoundary } from "@/client/components/iframe-error-boundary";
 import { MobileErrorDisplay } from "@/client/components/mobile-error-display";
 import { MobileIframe } from "@/client/components/mobile-iframe";
@@ -90,7 +88,8 @@ export const PublicResumePage = () => {
       <div className="min-h-screen bg-background">
         <Helmet>
           <title>
-            {title} - {t`Resume`}
+            {/* eslint-disable-next-line lingui/no-unlocalized-strings */}
+            {title} - Resume
           </title>
           <meta
             name="viewport"
@@ -151,13 +150,14 @@ export const PublicResumePage = () => {
     <div>
       <Helmet>
         <title>
-          {title} - {t`Reactive Resume`}
+          {/* eslint-disable-next-line lingui/no-unlocalized-strings */}
+          {title} - Resume
         </title>
       </Helmet>
 
       <div
         style={{ width: `${pageSizeMap[format].width}mm` }}
-        className="relative z-50 overflow-hidden rounded shadow-xl sm:mx-auto sm:mb-6 sm:mt-16 print:m-0 print:shadow-none"
+        className="relative z-50 overflow-hidden rounded shadow-xl sm:mx-auto sm:my-16 print:m-0 print:shadow-none"
       >
         <iframe
           key={iframeKey}
@@ -170,16 +170,6 @@ export const PublicResumePage = () => {
           }}
           onLoad={handleIframeLoad}
         />
-      </div>
-
-      <div className="hidden justify-center py-10 opacity-50 sm:flex print:hidden">
-        <Link to="/">
-          <Button size="sm" variant="ghost" className="space-x-1.5 text-xs font-normal">
-            <span>{t`Built with`}</span>
-            <Icon size={12} />
-            <span>{t`Reactive Resume`}</span>
-          </Button>
-        </Link>
       </div>
 
       <div className="fixed bottom-5 right-5 z-0 hidden sm:block print:hidden">

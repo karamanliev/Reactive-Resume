@@ -1,5 +1,5 @@
-import { t } from "@lingui/macro";
 import { CircleNotch, FilePdf } from "@phosphor-icons/react";
+import { type MobileErrorState, useMobileConfig } from "@reactive-resume/hooks";
 import { Button, ScrollArea } from "@reactive-resume/ui";
 import { pageSizeMap } from "@reactive-resume/utils";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -14,7 +14,6 @@ import { ThemeSwitch } from "@/client/components/theme-switch";
 import { TouchFeedback } from "@/client/components/touch-feedback";
 import { usePrintResume } from "@/client/services/resume";
 import { createIframeErrorHandler } from "@/client/utils/mobile-error-handler";
-import { type MobileErrorState, useMobileConfig } from "@reactive-resume/hooks";
 
 import { Footer } from "../home/components/footer";
 import { Header } from "../home/components/header";
@@ -123,9 +122,8 @@ export const RootPage = () => {
     return (
       <div className="min-h-screen bg-background">
         <Helmet>
-          <title>
-            {title} - {t`Resume`}
-          </title>
+          {/* eslint-disable-next-line lingui/no-unlocalized-strings */}
+          <title>{title} - Resume</title>
           <meta
             name="viewport"
             content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
@@ -172,11 +170,7 @@ export const RootPage = () => {
               className="min-h-[48px] min-w-[48px] rounded-full border bg-background/80 shadow-lg backdrop-blur-sm transition-all duration-200 hover:shadow-xl"
               onClick={onDownloadPdf}
             >
-              {loading ? (
-                <CircleNotch size={24} className="animate-spin" />
-              ) : (
-                <FilePdf size={24} />
-              )}
+              {loading ? <CircleNotch size={24} className="animate-spin" /> : <FilePdf size={24} />}
             </Button>
           </TouchFeedback>
         </div>
@@ -189,7 +183,8 @@ export const RootPage = () => {
     <div>
       <Helmet>
         <title>
-          {title} - {t`Resume`}
+          {/* eslint-disable-next-line lingui/no-unlocalized-strings */}
+          {title} - Resume
         </title>
       </Helmet>
 

@@ -26,7 +26,7 @@ export const HomePage = () => {
 
         <meta
           name="description"
-          content="A free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume."
+          content="Up to date resume of Hristo Karamanliev - Mobile and Web Developer."
         />
       </Helmet>
 
