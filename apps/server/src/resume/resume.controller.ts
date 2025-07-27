@@ -4,13 +4,16 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
   Param,
   Patch,
   Post,
   UseGuards,
 } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { ApiTags } from "@nestjs/swagger";
 import { User as UserEntity } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
@@ -28,6 +31,7 @@ import { User } from "@/server/user/decorators/user.decorator";
 
 import { OptionalGuard } from "../auth/guards/optional.guard";
 import { TwoFactorGuard } from "../auth/guards/two-factor.guard";
+import { Config } from "../config/schema";
 import { Resume } from "./decorators/resume.decorator";
 import { ResumeGuard } from "./guards/resume.guard";
 import { ResumeService } from "./resume.service";
@@ -35,11 +39,38 @@ import { ResumeService } from "./resume.service";
 @ApiTags("Resume")
 @Controller("resume")
 export class ResumeController {
-  constructor(private readonly resumeService: ResumeService) {}
+  constructor(
+    private readonly resumeService: ResumeService,
+    private readonly configService: ConfigService<Config>,
+  ) {}
 
   @Get("schema")
   getSchema() {
     return zodToJsonSchema(resumeDataSchema);
+  }
+
+  @Get("root-data")
+  async getRootData(@Headers("host") host?: string) {
+    const shareUrl = this.configService.get("SHARE_URL");
+    const shareUser = this.configService.get("SHARE_USER");
+    const shareSlug = this.configService.get("SHARE_SLUG");
+
+    if (!shareUrl || !shareUser || !shareSlug) {
+      return { resume: null };
+    }
+
+    try {
+      const shareHostname = new URL(shareUrl).hostname;
+
+      if (!host?.includes(shareHostname)) {
+        return { resume: null };
+      }
+
+      const resume = await this.resumeService.findOneByUsernameSlug(shareUser, shareSlug);
+      return { resume };
+    } catch {
+      throw new NotFoundException("Resume not found or not publicly accessible");
+    }
   }
 
   @Post()

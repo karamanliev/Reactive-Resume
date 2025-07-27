@@ -117,6 +117,12 @@ services:
       # OPENID_TOKEN_URL:
       # OPENID_USER_INFO_URL:
 
+      # -- Share URL (Optional) --
+      # Configure these variables to enable sharing a specific resume at the root URL
+      # SHARE_URL: https://resume.example.com  # The URL where the shared resume will be accessible
+      # SHARE_USER: johndoe                    # Username of the resume owner
+      # SHARE_SLUG: my-resume                  # Slug of the resume to share
+
 volumes:
   minio_data:
   postgres_data:

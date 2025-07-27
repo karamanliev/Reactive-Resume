@@ -10,6 +10,11 @@ export const configSchema = z.object({
   PUBLIC_URL: z.string().url(),
   STORAGE_URL: z.string().url(),
 
+  // Sharing (Optional)
+  SHARE_URL: z.string().url().optional(),
+  SHARE_USER: z.string().optional(),
+  SHARE_SLUG: z.string().optional(),
+
   // Database (Prisma)
   DATABASE_URL: z.string().url().startsWith("postgresql://"),
 

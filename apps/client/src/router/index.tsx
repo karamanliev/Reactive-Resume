@@ -13,21 +13,19 @@ import { builderLoader, BuilderPage } from "../pages/builder/page";
 import { DashboardLayout } from "../pages/dashboard/layout";
 import { ResumesPage } from "../pages/dashboard/resumes/page";
 import { SettingsPage } from "../pages/dashboard/settings/page";
-import { HomeLayout } from "../pages/home/layout";
-import { HomePage } from "../pages/home/page";
 import { ErrorPage } from "../pages/public/error";
 import { publicLoader, PublicResumePage } from "../pages/public/page";
+import { RootPage } from "../pages/root/page";
 import { Providers } from "../providers";
 import { AuthGuard } from "./guards/auth";
 import { GuestGuard } from "./guards/guest";
 import { authLoader } from "./loaders/auth";
+import { rootLoader } from "./loaders/root";
 
 export const routes = createRoutesFromElements(
   <Route element={<Providers />}>
     <Route errorElement={<ErrorPage />}>
-      <Route element={<HomeLayout />}>
-        <Route path="/" element={<HomePage />} />
-      </Route>
+      <Route path="/" loader={rootLoader} element={<RootPage />} />
 
       <Route path="auth">
         <Route element={<AuthLayout />}>
