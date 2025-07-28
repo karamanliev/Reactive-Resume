@@ -3,7 +3,7 @@ import type { ResumeDto } from "@reactive-resume/dto";
 import { type MobileErrorState, useMobileConfig } from "@reactive-resume/hooks";
 import { Button } from "@reactive-resume/ui";
 import { pageSizeMap } from "@reactive-resume/utils";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import type { LoaderFunction } from "react-router";
 import { redirect, useLoaderData } from "react-router";
@@ -18,9 +18,7 @@ import { queryClient } from "@/client/libs/query-client";
 import { findResumeByUsernameSlug, usePrintResume } from "@/client/services/resume";
 import { createIframeErrorHandler } from "@/client/utils/mobile-error-handler";
 
-// Open PDF in new tab for consistent cross-platform experience
 const openPDF = (url: string) => {
-  // Open PDF in new tab - gives users control over what to do with it
   const newWindow = window.open(url, "_blank");
   if (newWindow) {
     newWindow.focus();
@@ -40,6 +38,9 @@ export const PublicResumePage = () => {
 
   const { id, title, data: resume } = useLoaderData();
   const format = resume.metadata.page.format as keyof typeof pageSizeMap;
+
+  // Add ref for iframe to handle dynamic sizing
+  const frameRef = useRef<HTMLIFrameElement>(null);
 
   const updateResumeInFrame = useCallback(() => {
     const message = { type: "SET_RESUME", payload: resume };
@@ -80,6 +81,28 @@ export const PublicResumePage = () => {
 
   const handleDismissError = useCallback(() => {
     setCurrentError(null);
+  }, []);
+
+  // Handle dynamic iframe sizing
+  useEffect(() => {
+    if (!frameRef.current?.contentWindow) return;
+
+    const handleMessage = (event: MessageEvent) => {
+      if (!frameRef.current?.contentWindow) return;
+      if (event.origin !== window.location.origin) return;
+
+      if (event.data.type === "PAGE_LOADED") {
+        frameRef.current.width = event.data.payload.width;
+        frameRef.current.height = event.data.payload.height;
+        frameRef.current.contentWindow.removeEventListener("message", handleMessage);
+      }
+    };
+
+    frameRef.current.contentWindow.addEventListener("message", handleMessage);
+
+    return () => {
+      frameRef.current?.contentWindow?.removeEventListener("message", handleMessage);
+    };
   }, []);
 
   // For mobile devices, use the mobile-aware components
@@ -161,13 +184,10 @@ export const PublicResumePage = () => {
       >
         <iframe
           key={iframeKey}
+          ref={frameRef}
           title={title}
           src="/artboard/preview"
-          style={{
-            width: `${pageSizeMap[format].width}mm`,
-            height: `${pageSizeMap[format].height}mm`,
-            overflow: "hidden",
-          }}
+          style={{ width: `${pageSizeMap[format].width}mm`, overflow: "hidden" }}
           onLoad={handleIframeLoad}
         />
       </div>

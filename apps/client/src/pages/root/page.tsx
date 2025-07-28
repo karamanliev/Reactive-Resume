@@ -199,7 +199,6 @@ export const RootPage = () => {
           src="/artboard/preview"
           style={{
             width: `${pageSizeMap[format].width}mm`,
-            height: `${pageSizeMap[format].height}mm`,
             overflow: "hidden",
           }}
           onLoad={handleIframeLoad}
