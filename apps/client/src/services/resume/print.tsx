@@ -31,3 +31,6 @@ export const usePrintResume = () => {
 
   return { printResume: printResumeFn, loading, error };
 };
+
+// Re-export mobile-enhanced version
+export { handleMobilePDFDownload, useMobilePrintResume } from "./mobile-print";
