@@ -29,7 +29,6 @@ export const createMobileIframeConfig = (
 
     style = {
       width: `${pageSize.width}mm`,
-      height: `${pageSize.height}mm`,
       // eslint-disable-next-line lingui/no-unlocalized-strings
       overflow: "hidden",
       // eslint-disable-next-line lingui/no-unlocalized-strings
@@ -46,7 +45,6 @@ export const createMobileIframeConfig = (
 
     style = {
       width: `${pageSize.width}mm`,
-      height: `${pageSize.height}mm`,
       // eslint-disable-next-line lingui/no-unlocalized-strings
       overflow: "hidden",
       // eslint-disable-next-line lingui/no-unlocalized-strings
